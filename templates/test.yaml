@@ -1,0 +1,63 @@
+---
+apiVersion: cluster.x-k8s.io/v1alpha4
+kind: Cluster
+metadata:
+  name: "poc"
+spec:
+  infrastructureRef:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha4
+    kind: DOKSCluster
+    name: "poc"
+  controlPlaneRef:
+    kind: DOKSControlPlane
+    apiVersion: controlplane.cluster.x-k8s.io/v1alpha4
+    name: "poc"
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha4
+kind: DOKSCluster
+metadata:
+  name: "poc"
+spec:
+  region: "fra1"
+  version: "latest"
+---
+kind: DOKSControlPlane
+apiVersion: controlplane.cluster.x-k8s.io/v1alpha4
+metadata:
+  name: "poc"
+spec:
+  clusterName: "poc"
+---
+apiVersion: bootstrap.cluster.x-k8s.io/v1alpha4
+kind: DOKSBootstrapConfig
+metadata:
+  name: "poc"
+spec:
+  foo: "lol"
+---
+apiVersion: cluster.x-k8s.io/v1alpha4
+kind: MachinePool
+metadata:
+  name: "poc-mp-0"
+spec:
+  clusterName: "poc"
+  replicas: 2
+  template:
+    spec:
+      clusterName: "poc"
+      bootstrap:
+        configRef:
+          apiVersion: bootstrap.cluster.x-k8s.io/v1alpha4
+          kind: DOKSBootstrapConfig
+          name: "poc"
+      infrastructureRef:
+        name: "poc-mp-0"
+        apiVersion: infrastructure.cluster.x-k8s.io/v1alpha4
+        kind: DOKSNodePool
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha4
+kind: DOKSNodePool
+metadata:
+  name: "poc-mp-0"
+spec:
+  size: "s-1vcpu-2gb"

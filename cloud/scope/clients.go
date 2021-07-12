@@ -27,4 +27,5 @@ type DOClients struct {
 	Keys          godo.KeysService
 	LoadBalancers godo.LoadBalancersService
 	Domains       godo.DomainsService
+	Kubernetes    godo.KubernetesService
 }
